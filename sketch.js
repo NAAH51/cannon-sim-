@@ -2,7 +2,7 @@ let initialx, initialy;
 let xv, yv_init;
 let t;
 let windInput, gravityInput, angleInput, velocityInput, myInput, targetInput;
-let runButton, pauseButton, lineButton, resetTargetButton, moveTargetButton;
+let runButton, pauseButton, lineButton, resetTargetButton, moveTargetButton, toggleCastleButton;
 let barrel;
 let angle;
 let maxHeightH = 0;
@@ -22,6 +22,7 @@ let explosions = [];
 let castlePieces = [];
 let castle;
 let castleHit = false;
+let castleVisible = true;
 
 let CANNON_BASE_X = 195;
 let CANNON_PIVOT_Y_M = 4;
@@ -74,6 +75,11 @@ function setup() {
   resetTargetButton.position(10, 443);
   resetTargetButton.size(108, 22);
   resetTargetButton.mousePressed(resetCastle);
+
+  toggleCastleButton = createButton("TOGGLE CASTLE");
+  toggleCastleButton.position(10, 466);
+  toggleCastleButton.size(112, 22);
+  toggleCastleButton.mousePressed(toggleCastle);
 
   pauseButton = createButton("Pause / Resume");
   pauseButton.position(10, height - 110);
@@ -168,7 +174,7 @@ function styleMenuControls() {
     input.style("color", "#111");
   }
 
-  let buttons = [lineButton, moveTargetButton, resetTargetButton, pauseButton, runButton];
+  let buttons = [lineButton, moveTargetButton, resetTargetButton, toggleCastleButton, pauseButton, runButton];
 
   for (let button of buttons) {
     button.style("box-sizing", "border-box");
@@ -328,6 +334,7 @@ function playExplosionSound() {
 
 // ---- Castle ----------------------------------------------
 function resetCastle() {
+  castleVisible = true;
   castleHit = false;
   castlePieces = [];
 
@@ -540,6 +547,10 @@ function togglePause() {
   if (shot == "aimed") {
     paused = !paused;
   }
+}
+
+function toggleCastle() {
+  castleVisible = !castleVisible;
 }
 
 function toggleRun() {
@@ -804,7 +815,9 @@ function draw() {
   line(150, groundY(), width, groundY());
   createMarkers();
 
-  drawCastle();
+  if (castleVisible) {
+    drawCastle();
+  }
   updateCastlePieces();
   updateExplosions();
 
